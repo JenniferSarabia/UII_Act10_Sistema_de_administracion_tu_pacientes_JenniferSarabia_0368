@@ -1,0 +1,119 @@
+{% extends "pacientes/base.html" %}
+
+{% block body %}
+                <h3 class="m-4">Ver pacientes</h3>
+                <div class="row">
+                    <div class="col-12">
+                        {% if pacientes %}
+                        <div class="card bg-light ms-4 me-4 mb-4">
+                            <div class="card-header">
+                                <i class="fa-solid fa-list fa-lg"></i> Expediente pacientes
+                            </div>
+                            <div class="card-body">
+                              <p class="card-text">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Nombre paciente</th>
+      <th scope="col">Apellido</th>
+      <th scope="col">Fecha nacimiento</th>
+      <th scope="col">Telefono</th>
+      <th scope="col">Direccion</th>
+      <th scope="col">Correo</th>
+      <th scope="col">Fecha registro</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for paciente in pacientes %}
+        <tr>
+            <td>{{ paciente.nombre_pac }}</td>
+            <td>{{ paciente.apellido_pac }}</td>
+            <td>{{ paciente.fecha_nacimiento }}</td>
+            <td>{{ paciente.telefono_pac }}</td>
+            <td>{{ paciente.direccion_pac }}</td>
+            <td>{{ paciente.correo_pac }}</td>
+            <td>{{ paciente.fecha_registro }}</td>
+            <td>
+                <button type="button" class="btn btn-success me-1" href="{% url 'view_paciente' paciente.id %}" data-bs-toggle="modal" data-bs-target="#myModal{{paciente.id}}">
+                   <i class="fa-solid fa-circle-info fa-lg"></i>
+                </button>
+
+                <!--Modal - View Pacientes-->
+                <div class="modal" id="myModal{{paciente.id}}" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+            Paciente: {{ paciente.nombre_pac }} {{ paciente.apellido_pac }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-unstyled">
+            <li>Nombre Paciente: <strong>{{ paciente.nombre_pac }}</strong></li>
+            <li>Apellido: <strong>{{ paciente.apellido_pac }}</strong></li>
+            <li>Fecha nacimiento: <strong>{{ paciente.fecha_nacimiento }}</strong></li>
+            <li>Telefono: <strong>{{ paciente.telefono_pac }}</strong></li>
+            <li>Direccion: <strong>{{ paciente.direccion_pac }}</strong></li>
+            <li>Correo: <strong>{{ paciente.correo_pac }}</strong></li>
+            <li>Fecha registro: <strong>{{ paciente.fecha_registro }}</strong></li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a class="btn btn-warning me-1" href="{% url 'edit' paciente.id %}">
+    <i class="fa-solid fa-pen-to-square fa-lg"></i>
+</a>
+
+<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete{{paciente.id}}">
+    <i class="fa-solid fa-trash fa-lg"></i>
+</button>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="delete{{paciente.id}}" tabindex="-1" aria-labelledby="myModalLabel2_{{paciente.id}}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel_{{paciente.id}}"> 
+                    Detalles del Paciente: {{ paciente.nombre_pac }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estas seguro de eliminar este Paciente?</p>
+            </div>
+            <div class="modal-footer">
+                <form action="{% url 'delete' paciente.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-primary" value="Eliminar">
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+  </div>
+            </td>
+        </tr>
+    {% endfor %}
+  </tbody>
+</table>
+                                </div>
+                              </p>
+                            </div>
+                        </div>
+                        {% else %}
+                            <h5 class="alert alert-primary ms-4 me-4">No se enconto paciente</h5>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+{% endblock %}
